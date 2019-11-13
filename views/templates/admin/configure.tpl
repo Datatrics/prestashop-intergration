@@ -26,23 +26,9 @@
 <div class="panel">
 	<h3><i class="icon icon-credit-card"></i> {l s='Datatrics' mod='datatrics'}</h3>
 	<p>
-		<strong>{l s='Here is my new generic module!' mod='datatrics'}</strong><br />
-		{l s='Thanks to PrestaShop, now I have a great module.' mod='datatrics'}<br />
-		{l s='I can configure it using the following configuration form.' mod='datatrics'}
+		<strong>{l s='Connect your store with Datatrics!' mod='datatrics'}</strong><br />
+		{l s='Fill in your projectid to start track your customers with Datatrics' mod='datatrics'}<br />
+		<a href="https://help.datatrics.com" target="_blank">{l s='Reach out to the Datatrics documentation howto configure this module' mod='datatrics'}</a>
 	</p>
 	<br />
-	<p>
-		{l s='This module will boost your sales!' mod='datatrics'}
-	</p>
-</div>
-
-<div class="panel">
-	<h3><i class="icon icon-tags"></i> {l s='Documentation' mod='datatrics'}</h3>
-	<p>
-		&raquo; {l s='You can get a PDF documentation to configure this module' mod='datatrics'} :
-		<ul>
-			<li><a href="#" target="_blank">{l s='English' mod='datatrics'}</a></li>
-			<li><a href="#" target="_blank">{l s='French' mod='datatrics'}</a></li>
-		</ul>
-	</p>
 </div>

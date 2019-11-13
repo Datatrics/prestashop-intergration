@@ -27,5 +27,5 @@
 *}
 
 <noscript>
-    <img src="https://tr.datatrics.com/?idsite={$datatrics_project_id}&amp;rec=1" style="border:0" alt="" />
+    <img src="https://tr.datatrics.com/?idsite={$datatrics_projectid}&amp;rec=1" style="border:0" alt="" />
 </noscript>
