@@ -1,14 +1,42 @@
+{*
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 Benichou
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+*  @author    Benichou <benichou.software@gmail.com>
+*  @copyright 2016 Benichou
+*  @license   http://opensource.org/licenses/MIT  The MIT License (MIT)
+*}
+
 {if $datatrics_order}
     <script>
-        var datatrics_order = {$datatrics_order|@json_encode nofilter};
+        var datatrics_order = {$datatrics_order};
     </script>
     {literal}
     <script>
-        for (i = 0; i < datatrics_order.products.length; i++) {
-            var product = datatrics_order.products[i];
-            _paq.push(['addEcommerceItem', product.id, product.name, product.category, product.price, product.quantity]);
+        for (i = 0; i < datatrics_order.conversion.products.length; i++) {
+            var product = datatrics_order.conversion.products[i];
+            _paq.push(['addEcommerceItem', product.itemid, product.name, product.category, product.price, product.quantity]);
         }
-        _paq.push(['trackEcommerceOrder', datatrics_order.id, datatrics_order.total, datatrics_order.subtotal, datatrics_order.tax, datatrics_order.shipping, 0]);
+        _paq.push(['trackEcommerceOrder', datatrics_order.conversionid, datatrics_order.conversion.total, datatrics_order.conversion.subtotal, datatrics_order.conversion.tax, datatrics_order.conversion.shipping, 0]);
         _paq.push(['trackPageView']);
     </script>
     {/literal}

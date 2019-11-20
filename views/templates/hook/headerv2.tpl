@@ -26,45 +26,42 @@
 *  @license   http://opensource.org/licenses/MIT  The MIT License (MIT)
 *}
 
-<script>
-    var datatrics_projectid = {$datatrics.projectid};
-    {if $datatrics.user}
-        var datatrics_user = {$datatrics.user};
-    {/if}
-    {if $datatrics.product}
-        var datatrics_product = {$datatrics.product};
-    {/if}
-    {if $datatrics.category}
-        var datatrics_category = {$datatrics.category};
-    {/if}
-    {if $datatrics.cart}
-        var datatrics_cart = {$datatrics.cart};
-    {/if}
-</script>
 {literal}
 <script>
     var _paq = _paq || [];
-    if(datatrics_user !== null){
-        _paq.push(['setCustomData', { 'profileid': datatrics_user.id, 'profilesource': 'Prestashop', 'firstname': datatrics_user.firstname,'lastname': datatrics_user.lastname,'email': datatrics_user.email}]);
-    }
-    if(typeof datatrics_product !== 'undefined'){
-        _paq.push(['setEcommerceView', datatrics_product.id, datatrics_product.name, datatrics_product.category, datatrics_product.price]);
-    }
-    if(typeof datatrics_category !== 'undefined'){
-        _paq.push(['setEcommerceView', false, false, datatrics_category.name, false]);
-    }
-    if(typeof datatrics_cart !== 'undefined'){
-        for (i = 0; i < datatrics_cart.products.length; i++) {
-            var product = datatrics_cart.products[i];
-            _paq.push(['addEcommerceItem', product.id, product.name, product.category, product.price, product.quantity]);
+    var customData = {};
+    if(prestashop.customer.is_logged !== false){
+        if(typeof prestashop.customer.id !== 'undefined'){
+            customData.profileid = prestashop.customer.id;
+            customData.profilesource = prestashop.modules.datatrics.source;
         }
-        _paq.push(['trackEcommerceCartUpdate', datatrics_cart.total]);
+        if(prestashop.modules.datatrics.customer !== 'null'){
+            customData.profileid = prestashop.modules.datatrics.customer.id;
+            customData.profilesource = prestashop.modules.datatrics.source;
+        }
+        customData.firstname = prestashop.customer.firstname;
+        customData.lastname = prestashop.customer.lastname;
+        customData.email = prestashop.customer.email;
+        _paq.push(['setCustomData', customData]);
+    }
+    if(prestashop.page.page_name === 'product' && prestashop.modules.datatrics.product !== null){
+        _paq.push(['setEcommerceView', prestashop.modules.datatrics.product.id, prestashop.modules.datatrics.product.name, prestashop.modules.datatrics.product.category, prestashop.modules.datatrics.product.price]);
+    }
+    if(prestashop.page.page_name === 'category'){
+        _paq.push(['setEcommerceView', false, false, prestashop.page.meta.title, false]);
+    }
+    if(prestashop.cart.products_count > 0){
+        for (i = 0; i < prestashop.cart.products.length; i++) {
+            var product = prestashop.cart.products[i];
+            _paq.push(['addEcommerceItem', product.id, product.name, product.category, product.price_with_reduction, product.quantity]);
+        }
+        _paq.push(['trackEcommerceCartUpdate', prestashop.cart.totals.total.amount]);
     }
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
         _paq.push(['setTrackerUrl', 'https://tr.datatrics.com']);
-        _paq.push(['setProjectId', datatrics_projectid]);
+        _paq.push(['setProjectId', prestashop.modules.datatrics.projectid]);
         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
         g.type='text/javascript';
         g.defer=true; g.async=true; g.src='https://tr.datatrics.com', s.parentNode.insertBefore(g,s);

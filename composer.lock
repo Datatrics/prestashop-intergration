@@ -1,0 +1,82 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "0cffee2780c09a9e83c4f0f5a4aea1e5",
+    "packages": [
+        {
+            "name": "datatrics/php-api",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Datatrics/php-api.git",
+                "reference": "1b7425c78904844e750d5a0b65daf7de592d1638"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Datatrics/php-api/zipball/1b7425c78904844e750d5a0b65daf7de592d1638",
+                "reference": "1b7425c78904844e750d5a0b65daf7de592d1638",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "@stable",
+                "phpmd/phpmd": "@stable",
+                "phpunit/php-token-stream": "1.4.*",
+                "phpunit/phpunit": "5.7.*",
+                "squizlabs/php_codesniffer": "3.1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Datatrics\\API\\": [
+                        "src/",
+                        "test/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nico Borghuis",
+                    "email": "nico@datatrics.com"
+                },
+                {
+                    "name": "Bas Nieland",
+                    "email": "bas@datatrics.com"
+                },
+                {
+                    "name": "Pepijn Yben",
+                    "email": "pepijn@datatrics.com"
+                }
+            ],
+            "description": "Datattrics API client",
+            "keywords": [
+                "PHP-API",
+                "api",
+                "datatrics",
+                "datatrics.com",
+                "php-sdk"
+            ],
+            "time": "2018-04-05T09:42:35+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.0"
+    },
+    "platform-dev": []
+}
