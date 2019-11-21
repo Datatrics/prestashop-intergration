@@ -1346,6 +1346,8 @@ class Datatrics extends Module
                 }
                 $variants_so_far[$variant['id_product_attribute']]['name'] .= ' (' . $variant['group_name'];
                 $variants_so_far[$variant['id_product_attribute']]['name'] .= ': ' . $variant['attribute_name'] . ')';
+                $variants_so_far[$variant['id_product_attribute']]['group_name'] = $variant['group_name'];
+                $variants_so_far[$variant['id_product_attribute']]['attribute_name'] = $variant['attribute_name'];
             }
             $copy_contentItem = $contentItem;
             foreach ($variants_so_far as $key => $value) {
@@ -1357,6 +1359,8 @@ class Datatrics extends Module
                 $variantItem['item']['sale_price'] = $value['price'];
                 $variantItem['item']['price'] = $value['price'];
                 $variantItem['item']['stock'] = (string) $value['stock'];
+                $variantItem['item']['group_name'] = (string) $value['group_name'];
+                $variantItem['item']['attribute_name'] = (string) $value['attribute_name'];
                 if (isset($value['image'])) {
                     $variantItem['item']['image'] = (string) $value['image'];
                 }
