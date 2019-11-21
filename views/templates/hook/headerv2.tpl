@@ -42,6 +42,7 @@
         customData.firstname = prestashop.customer.firstname;
         customData.lastname = prestashop.customer.lastname;
         customData.email = prestashop.customer.email;
+        customData.shop_id = prestashop.modules.datatrics.shop.id;
         _paq.push(['setCustomData', customData]);
     }
     if(prestashop.page.page_name === 'product' && prestashop.modules.datatrics.product !== null){

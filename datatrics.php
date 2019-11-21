@@ -40,6 +40,7 @@ class Datatrics extends Module
     public $hooks = array(
         'displayHeader',
         'displayOrderConfirmation',
+        'displayPaymentReturn',
         'actionObjectOrderPaymentAddAfter',
         'actionObjectUpdateAfter',
         'actionObjectDeleteAfter',
@@ -416,6 +417,9 @@ class Datatrics extends Module
             'category' => null,
             'user' => null,
             'cart' => null,
+            'shop' => [
+                'id' => $this->context->shop->id,
+            ],
         ];
         if ($this->isProductPage()) {
             $context['product'] = $this->getProductFromController($this->context->controller);
@@ -423,7 +427,7 @@ class Datatrics extends Module
         if ($this->isCategoryPage()) {
             $context['category'] = $this->getCategoryFromController($this->context->controller);
         }
-        if (!$this->isPrestashop16 && !$this->isCartConformationPage() && $cart = $this->context->cart) {
+        if ($this->isPrestashop16 && !$this->isCartConformationPage() && $cart = $this->context->cart) {
             if ($cart->getOrderTotal() > 0) {
                 $context['cart'] = [
                     'total' => $cart->getOrderTotal(),
@@ -435,23 +439,24 @@ class Datatrics extends Module
             $context['user'] = [
                 'id' => $this->context->customer->id,
             ];
-            if (!$this->isPrestashop16) {
+            if ($this->isPrestashop16) {
                 $context['user']['email'] = $this->context->customer->email;
                 $context['user']['firstname'] = $this->context->customer->firstname;
                 $context['user']['lastname'] = $this->context->customer->lastname;
             }
         }
         if (!$this->isPrestashop16) {
-            return [
+            return  [
                 'projectid' => $context['projectid'],
                 'source' => 'Prestashop-' . $this->context->shop->id,
                 'product' => $context['product'],
                 'category' => $context['category'],
                 'customer' => $context['user'],
+                'shop' => $context['shop'],
             ];
         }
 
-        return ['datatarics' => $context];
+        return ['datatrics' => $context];
     }
 
     /**
@@ -472,16 +477,10 @@ class Datatrics extends Module
         if (!$this->isPrestashop16) {
             return $this->display(__FILE__, 'headerv2.tpl');
         }
-        $context = $this->hookActionFrontControllerSetVariables();
-        $jsonContext = [];
-        foreach ($context['datatrics'] as $key => $value) {
-            if (is_array($value)) {
-                $value = Tools::jsonEncode($value);
-            }
-            $jsonContext[$key] = $value;
-        }
+        $context = $this->hookActionFrontControllerSetVariables(true);
+        Media::addJsDef(['datatrics' => $context['datatrics']]);
         $this->context->smarty->assign([
-            'datatrics' => $jsonContext,
+            'datatrics' => $context['datatrics'],
         ]);
 
         return $this->display(__FILE__, 'header.tpl');
@@ -520,17 +519,22 @@ class Datatrics extends Module
      */
     public function hookDisplayOrderConfirmation(array $params): string
     {
-        if (!isset($params['object'])) {
+        if (!isset($params['order'])) {
             return '';
         }
         $projectid = Tools::safeOutput(Configuration::get('DATATRICS_PROJECTID'));
         if (!$projectid) {
             return '';
         }
-        $order_reference = $params['object']->order_reference;
-        $order = $this->getOrderFromReference($order_reference);
+        $order = $params['order'];
         $cart = $this->getCart($order->id_cart);
-        $conversion = $this->buildApiConversion($order, $cart);
+        try {
+            $conversion = $this->buildApiConversion($order, $cart);
+        } catch (\Exception $e) {
+            PrestaShopLogger::addLog('[DATATRICS] :' . $e->getMessage());
+
+            return '';
+        }
         $sync = Tools::safeOutput(Configuration::get('DATATRICS_SYNC'));
         $apikey = Tools::safeOutput(Configuration::get('DATATRICS_APIKEY'));
         if ($apikey && $sync) {
@@ -545,23 +549,24 @@ class Datatrics extends Module
         if (!$tracker) {
             return '';
         }
+        Media::addJsDef(['datatrics_order' => $conversion]);
         $this->context->smarty->assign([
-            'datatrics_order' => Tools::jsonEncode($conversion),
+            'datatrics_order' => $conversion,
         ]);
 
         return $this->display(__FILE__, 'order_confirmation.tpl');
     }
 
     /**
-     * Add purchase after payment.
+     * Add conversion on payment returm page.
      *
      * @param array $params
      *
      * @return string
      */
-    public function hookActionObjectOrderPaymentAddAfter(array $params): string
+    public function hookDisplayPaymentReturn(array $params): string
     {
-        if (!isset($params['object'])) {
+        if (!isset($params['objOrder'])) {
             return '';
         }
         $projectid = Tools::safeOutput(Configuration::get('DATATRICS_PROJECTID'));
@@ -571,7 +576,13 @@ class Datatrics extends Module
         $order_reference = $params['object']->order_reference;
         $order = $this->getOrderFromReference($order_reference);
         $cart = $this->getCart($order->id_cart);
-        $conversion = $this->buildApiConversion($order, $cart);
+        try {
+            $conversion = $this->buildApiConversion($order, $cart);
+        } catch (\Exception $e) {
+            PrestaShopLogger::addLog('[DATATRICS] :' . $e->getMessage());
+
+            return '';
+        }
         $sync = Tools::safeOutput(Configuration::get('DATATRICS_SYNC'));
         $apikey = Tools::safeOutput(Configuration::get('DATATRICS_APIKEY'));
         if ($apikey && $sync) {
@@ -586,6 +597,7 @@ class Datatrics extends Module
         if (!$tracker) {
             return '';
         }
+        Media::addJsDef(['datatrics_order' => $conversion]);
         $this->context->smarty->assign([
             'datatrics_order' => $conversion,
         ]);
@@ -1279,6 +1291,7 @@ class Datatrics extends Module
                     'url' => $url,
                     'image' => $imagePath,
                     'images' => $imagePaths,
+                    'languages' => $language['iso_code'],
                 ],
             ];
             if ($product->id_category_default) {

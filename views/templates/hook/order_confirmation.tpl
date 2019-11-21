@@ -27,13 +27,10 @@
 *}
 
 {if $datatrics_order}
-    <script>
-        var datatrics_order = {$datatrics_order};
-    </script>
     {literal}
     <script>
-        for (i = 0; i < datatrics_order.conversion.products.length; i++) {
-            var product = datatrics_order.conversion.products[i];
+        for (i = 0; i < datatrics_order.conversion.items.length; i++) {
+            var product = datatrics_order.conversion.items[i];
             _paq.push(['addEcommerceItem', product.itemid, product.name, product.category, product.price, product.quantity]);
         }
         _paq.push(['trackEcommerceOrder', datatrics_order.conversionid, datatrics_order.conversion.total, datatrics_order.conversion.subtotal, datatrics_order.conversion.tax, datatrics_order.conversion.shipping, 0]);
