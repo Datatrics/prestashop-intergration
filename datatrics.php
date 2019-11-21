@@ -1361,6 +1361,7 @@ class Datatrics extends Module
                 $variantItem['item']['stock'] = (string) $value['stock'];
                 $variantItem['item']['group_name'] = (string) $value['group_name'];
                 $variantItem['item']['attribute_name'] = (string) $value['attribute_name'];
+                $variantItem['item']['variant_id'] = (string) $key;
                 if (isset($value['image'])) {
                     $variantItem['item']['image'] = (string) $value['image'];
                 }
