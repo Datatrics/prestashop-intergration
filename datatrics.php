@@ -1328,12 +1328,19 @@ class Datatrics extends Module
                     $variants_so_far[$variant['id_product_attribute']] = [];
                     $variants_so_far[$variant['id_product_attribute']]['name'] = $contentItem['item']['name'];
                     $variants_so_far[$variant['id_product_attribute']]['sku'] = null;
-                    $variants_so_far[$variant['id_product_attribute']]['price'] = 0;
                     $variants_so_far[$variant['id_product_attribute']]['stock'] = $variant['quantity'];
-                    $variants_so_far[$variant['id_product_attribute']]['price'] = Product::getPriceStatic(
+                    $variants_so_far[$variant['id_product_attribute']]['sale_price'] = Product::getPriceStatic(
                         $product->id,
                         true,
                         $variant['id_product_attribute']
+                    );
+                    $variants_so_far[$variant['id_product_attribute']]['price'] = Product::getPriceStatic(
+                        $product->id,
+                        true,
+                        $variant['id_product_attribute'],
+                        6,
+                        null,
+                        false
                     );
                     if (isset($image['id_image'])) {
                         $imagePath = $this->context->link->getImageLink(
@@ -1356,7 +1363,7 @@ class Datatrics extends Module
                 $variantItem['item']['parent_id'] = (string) $product->id;
                 $variantItem['item']['name'] = (string) $value['name'];
                 $variantItem['item']['sku'] = (string) $value['sku'];
-                $variantItem['item']['sale_price'] = $value['price'];
+                $variantItem['item']['sale_price'] = $value['sale_price'];
                 $variantItem['item']['price'] = $value['price'];
                 $variantItem['item']['stock'] = (string) $value['stock'];
                 $variantItem['item']['group_name'] = (string) $value['group_name'];
